@@ -1,6 +1,8 @@
 package flxanimate;
 
+#if sys
 import sys.io.File;
+#end
 import flixel.util.FlxDestroyUtil;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flxanimate.frames.FlxAnimateFrames;
@@ -14,6 +16,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 	public function loadAtlasEx(img:FlxGraphicAsset, pathOrStr:String = null, myJson:Dynamic = null)
 	{
 		var animJson:AnimAtlas = null;
+		#if sys
 		if(myJson is String)
 		{
 			var trimmed:String = pathOrStr.trim();
@@ -23,6 +26,9 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 			animJson = cast haxe.Json.parse(_removeBOM(myJson));
 		}
 		else animJson = cast myJson;
+		#else
+		animJson = cast myJson;
+		#end
 
 		var isXml:Null<Bool> = null;
 		var myData:Dynamic = pathOrStr;
@@ -30,6 +36,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 		var trimmed:String = pathOrStr.trim();
 		trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
 
+		#if sys
 		if(trimmed == '.json') //Path is json
 		{
 			myData = File.getContent(pathOrStr);
@@ -40,6 +47,8 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 			myData = File.getContent(pathOrStr);
 			isXml = true;
 		}
+		#end
+		
 		myData = _removeBOM(myData);
 
 		// Automatic if everything else fails
