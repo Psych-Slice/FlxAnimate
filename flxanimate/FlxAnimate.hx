@@ -706,8 +706,8 @@ class FlxAnimate extends FlxSprite
 
 	override function destroy()
 	{
-		//if (anim != null)
-			//anim.destroy();
+		if (anim != null)
+			anim.destroy();
 		anim = null;
 
 		// #if FLX_SOUND_SYSTEM

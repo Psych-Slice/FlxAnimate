@@ -16,19 +16,18 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 	public function loadAtlasEx(img:FlxGraphicAsset, pathOrStr:String = null, myJson:Dynamic = null)
 	{
 		var animJson:AnimAtlas = null;
-		#if sys
+
 		if(myJson is String)
 		{
+			#if sys
 			var trimmed:String = pathOrStr.trim();
 			trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
-
 			if(trimmed == '.json') myJson = File.getContent(myJson); //is a path
+			#end
+
 			animJson = cast haxe.Json.parse(_removeBOM(myJson));
 		}
 		else animJson = cast myJson;
-		#else
-		animJson = cast myJson;
-		#end
 
 		var isXml:Null<Bool> = null;
 		var myData:Dynamic = pathOrStr;
@@ -73,9 +72,11 @@ class PsychFlxAnimate extends OriginalFlxAnimate
 				}
 		}
 
+		//? At this point "myData" contains a parsed data (NOT A PATH TO IT)
 		anim._loadAtlas(animJson);
+		@:privateAccess
 		if(!isXml) frames = FlxAnimateFrames.fromSpriteMap(cast myData, img);
-		else frames = FlxAnimateFrames.fromSparrow(cast myData, img);
+		else frames = FlxAnimateFrames.fromSparrowDirect(img,cast myData);
 		origin = anim.curInstance.symbol.transformationPoint;
 	}
 
